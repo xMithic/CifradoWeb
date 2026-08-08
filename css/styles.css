@@ -561,21 +561,36 @@ td.col-plain {
   color: var(--gray-light);
 }
 
-/* Verde Neón para resultado final generado */
+/* Verde Neón para resultado final generado - Pulso y desvanecimiento suave */
 .result-box.success-glow {
-  border-color: #39ff14 !important;
-  color: #39ff14 !important;
-  text-shadow: 0 0 8px #39ff14, 0 0 20px rgba(57, 255, 20, 0.6) !important;
-  box-shadow: inset 0 0 12px rgba(57, 255, 20, 0.2), 0 0 22px rgba(57, 255, 20, 0.4) !important;
-  animation: greenPulse 1.2s ease-in-out infinite alternate;
+  animation: neonPulseFade 2s ease-in-out forwards !important;
 }
 
-@keyframes greenPulse {
+@keyframes neonPulseFade {
   0% {
-    box-shadow: inset 0 0 8px rgba(57, 255, 20, 0.15), 0 0 15px rgba(57, 255, 20, 0.3);
+    border-color: #39ff14;
+    color: #39ff14;
+    text-shadow: 0 0 8px #39ff14, 0 0 20px rgba(57, 255, 20, 0.6);
+    box-shadow: inset 0 0 12px rgba(57, 255, 20, 0.2), 0 0 22px rgba(57, 255, 20, 0.4);
+  }
+  30% {
+    border-color: #39ff14;
+    color: #39ff14;
+    text-shadow: 0 0 15px #39ff14, 0 0 30px rgba(57, 255, 20, 0.8);
+    box-shadow: inset 0 0 18px rgba(57, 255, 20, 0.4), 0 0 35px rgba(57, 255, 20, 0.7);
+  }
+  60% {
+    border-color: #39ff14;
+    color: #39ff14;
+    text-shadow: 0 0 10px #39ff14, 0 0 20px rgba(57, 255, 20, 0.5);
+    box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.2), 0 0 15px rgba(57, 255, 20, 0.3);
   }
   100% {
-    box-shadow: inset 0 0 18px rgba(57, 255, 20, 0.3), 0 0 30px rgba(57, 255, 20, 0.7);
+    /* Regresa al estado base del .result-box original */
+    border-color: rgba(114, 239, 255, 0.4);
+    color: var(--white);
+    text-shadow: 0 0 6px var(--cyan-glow);
+    box-shadow: inset 0 0 10px rgba(114, 239, 255, 0.05);
   }
 }
 
