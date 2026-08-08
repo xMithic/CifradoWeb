@@ -26,7 +26,7 @@
       }
 
       // Audio para cambio de campo (se intentará cargar si existe o usará el principal)
-      switchFieldAudio = new Audio('sounds/chance.wav');
+      switchFieldAudio = new Audio('sounds/WaterDrop.wav');
       switchFieldAudio.volume = 0.3;
 
       // Audio para éxito de cifrado
