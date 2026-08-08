@@ -183,7 +183,7 @@
       if (elResultado) {
         elResultado.classList.remove('success-glow');
       }
-    }, 2000);
+    }, 1000);
   }
 
   async function animateWithTyping(result, steps, originalText) {
