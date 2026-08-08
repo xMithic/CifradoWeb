@@ -26,11 +26,11 @@
       }
 
       // Audio para cambio de campo (se intentará cargar si existe o usará el principal)
-      switchFieldAudio = new Audio('sounds/SoundText.wav');
+      switchFieldAudio = new Audio('sounds/chance.wav');
       switchFieldAudio.volume = 0.3;
 
       // Audio para éxito de cifrado
-      successAudio = new Audio('sounds/SoundText.wav');
+      successAudio = new Audio('sounds/end.wav');
       successAudio.volume = 0.4;
     } catch (e) {
       console.warn('Audio no disponible:', e);
