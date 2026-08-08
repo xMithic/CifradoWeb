@@ -173,17 +173,21 @@
     if (!elResultado) return;
     if (successTimer) clearTimeout(successTimer);
 
+    // Truco para reiniciar la animación CSS si el usuario presiona "Cifrar" múltiples veces
+    elResultado.classList.remove('success-glow');
+    void elResultado.offsetWidth; // Dispara un reflow (recalculo visual)
+    
     elResultado.classList.add('success-glow');
     if (window.VigenereSound) {
       window.VigenereSound.playSuccessSound();
     }
 
-    // El resplandor Verde Neón dura exactamente 2 segundos
+    // Cambiado a 2000ms para coincidir con la duración de la animación y tu comentario
     successTimer = setTimeout(function() {
       if (elResultado) {
         elResultado.classList.remove('success-glow');
       }
-    }, 1000);
+    }, 2000);
   }
 
   async function animateWithTyping(result, steps, originalText) {
@@ -211,7 +215,6 @@
       if (window.VigenereSound) window.VigenereSound.playKeySound();
     }
 
-    // Al terminar, dispara el resplandor Verde Neón durante exactamente 2 segundos
     triggerSuccessState();
 
     await wait(600);
