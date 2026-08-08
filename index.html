@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cifrado de Vigenère interactivo con tabula recta visual. Cifra y descifra mensajes de forma segura con esta herramienta profesional.">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta property="og:title" content="Cifrado de Vigenère — Herramienta Interactiva">
+  <meta property="og:description" content="Cifra y descifra mensajes con el método de Vigenère. Tabula recta interactiva con animaciones en tiempo real.">
+  <title>Cifrado de Vigenère — Herramienta Interactiva</title>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inconsolata:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- === Fondo decorativo === -->
+  <div class="ambient-glow"></div>
+  <div id="starsContainer"></div>
+
+  <!-- === Encabezado === -->
+  <header>
+    <h1 data-text="Cifrado de Vigenère">Cifrado de Vigenère <span class="version-badge">v2.0</span></h1>
+    <p class="subtitle">Tabula recta interactiva — cifra y descifra con total seguridad</p>
+  </header>
+
+  <!-- === Contenido principal === -->
+  <main class="layout">
+
+    <!-- Panel de la tabla (izquierda) -->
+    <section class="panel table-panel" id="tablePanel">
+      <h2>Tabula Recta</h2>
+      <table id="vigenereTable" aria-label="Tabla de Vigenère 26×26"></table>
+    </section>
+
+    <!-- Panel del formulario (derecha) -->
+    <section class="panel form-panel" id="formPanel">
+      <h2>Herramienta</h2>
+
+      <!-- Toggle Cifrar / Descifrar -->
+      <div class="mode-toggle" role="tablist" aria-label="Modo de operación">
+        <button class="mode-btn active" id="modeEncrypt" role="tab" aria-selected="true">
+          ◈ Cifrar
+        </button>
+        <button class="mode-btn" id="modeDecrypt" role="tab" aria-selected="false">
+          ◇ Descifrar
+        </button>
+      </div>
+
+      <!-- Campo: Texto -->
+      <div class="input-group">
+        <label for="password" id="passwordLabel">Texto a cifrar</label>
+        <input 
+          type="text" 
+          id="password" 
+          placeholder="Ej: MiClaveSecreta" 
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="passwordHint"
+        >
+        <p class="input-hint" id="passwordHint">Presiona Enter para saltar al siguiente campo ↵</p>
+      </div>
+
+      <!-- Campo: Clave -->
+      <div class="input-group">
+        <label for="keyword">Palabra clave</label>
+        <input 
+          type="text" 
+          id="keyword" 
+          placeholder="Ej: LLAVE" 
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="keywordHint"
+        >
+        <p class="input-hint" id="keywordHint">Presiona Enter para ejecutar el cifrado ↵</p>
+      </div>
+
+      <!-- Botón de acción -->
+      <button class="btn-primary" id="btnAction" type="button">
+        ⟐ Cifrar
+      </button>
+
+      <!-- Resultado -->
+      <div class="result-section">
+        <label>
+          <span id="resultLabel">Resultado cifrado</span>
+          <button class="copy-btn" id="btnCopy" type="button" title="Copiar al portapapeles">
+            ❐ Copiar
+          </button>
+        </label>
+        <div class="result-box empty" id="resultado" aria-live="polite">—</div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- === Pie de página === -->
+  <footer>
+    <p class="footer-note">
+      <span>Fila</span> = letra de la clave &middot; 
+      <span>Columna</span> = letra del texto &middot; 
+      <span>Intersección</span> = carácter cifrado
+    </p>
+  </footer>
+
+  <!-- === JavaScript === -->
+  <script src="js/cipher.js"></script>
+  <script src="js/table.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
