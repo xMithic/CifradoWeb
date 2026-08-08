@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cifrado de Vigenère</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --border: #30363d;
+            --accent: #58a6ff;
+            --accent2: #39d353;
+            --text: #c9d1d9;
+            --highlight: #f778ba;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, #161b22, #0d1117 70%);
+            color: var(--text);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            padding: 24px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin-bottom: 4px;
+            text-shadow: 0 0 12px rgba(88, 166, 255, 0.4);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #8b949e;
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+
+        .layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            max-width: 1300px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-panel {
+            flex: 1 1 280px;
+            position: sticky;
+            top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        input[type=text] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #0d1117;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        input[type=text]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 8px rgba(88, 166, 255, 0.5);
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), #1f6feb);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(88, 166, 255, 0.4);
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 8px;
+            background: #0d1117;
+            border: 1px dashed var(--accent2);
+            min-height: 50px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            word-break: break-all;
+            color: var(--accent2);
+            text-shadow: 0 0 8px rgba(57, 211, 83, 0.4);
+        }
+
+        .table-panel {
+            flex: 2 1 600px;
+            overflow: auto;
+            max-height: 80vh;
+        }
+
+        table {
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th,
+        td {
+            width: 28px;
+            height: 28px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: background .25s, color .25s, transform .25s;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: #21262d;
+            color: var(--accent);
+            z-index: 2;
+        }
+
+        tbody th {
+            position: sticky;
+            left: 0;
+            background: #21262d;
+            color: var(--accent);
+            z-index: 1;
+        }
+
+        thead th:first-child,
+        tbody th {
+            z-index: 3;
+        }
+
+        td.highlight {
+            background: var(--highlight);
+            color: #0d1117;
+            font-weight: 700;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px var(--highlight);
+        }
+
+        td.row-key {
+            background: rgba(88, 166, 255, 0.15);
+        }
+
+        td.col-plain {
+            background: rgba(57, 211, 83, 0.12);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #6e7681;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Cifrado de Vigenère</h1>
+    <p class="subtitle">Tabla interactiva (Tabula Recta) — ingresa tu contraseña y la palabra clave</p>
+
+    <div class="layout">
+
+        <div class="panel form-panel">
+            <label for="password">Contraseña a cifrar</label>
+            <input type="text" id="password" placeholder="Ej: MiClaveSecreta">
+
+            <label for="keyword">Palabra clave</label>
+            <input type="text" id="keyword" placeholder="Ej: LLAVE">
+
+            <button id="btnCifrar">Cifrar</button>
+
+            <label>Cifrado final</label>
+            <div class="result-box" id="resultado">—</div>
+        </div>
+
+        <div class="panel table-panel">
+            <table id="vigenereTable"></table>
+        </div>
+
+    </div>
+
+    <p class="footer-note">Cada letra usa la fila = letra de la palabra clave, columna = letra de la contraseña. La
+        intersección es el carácter cifrado.</p>
+
+    <script>
+        const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        function buildTable() {
+            const table = document.getElementById("vigenereTable");
+            const thead = document.createElement("thead");
+            const headRow = document.createElement("tr");
+            headRow.appendChild(document.createElement("th"));
+            for (const letter of ALPHABET) {
+                const th = document.createElement("th");
+                th.textContent = letter;
+                th.dataset.col = letter;
+                headRow.appendChild(th);
+            }
+            thead.appendChild(headRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement("tbody");
+            for (let r = 0; r < 26; r++) {
+                const tr = document.createElement("tr");
+                const th = document.createElement("th");
+                th.textContent = ALPHABET[r];
+                th.dataset.row = ALPHABET[r];
+                tr.appendChild(th);
+                for (let c = 0; c < 26; c++) {
+                    const td = document.createElement("td");
+                    const charCode = (r + c) % 26;
+                    td.textContent = ALPHABET[charCode];
+                    td.dataset.row = ALPHABET[r];
+                    td.dataset.col = ALPHABET[c];
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+            table.appendChild(tbody);
+        }
+        buildTable();
+
+        function clearHighlights() {
+            document.querySelectorAll("td.highlight, td.row-key, td.col-plain")
+                .forEach(td => td.classList.remove("highlight", "row-key", "col-plain"));
+        }
+
+        function getCell(rowLetter, colLetter) {
+            return document.querySelector(`td[data-row="${rowLetter}"][data-col="${colLetter}"]`);
+        }
+
+        function vigenereEncryptChar(plainLetter, keyLetter) {
+            const p = ALPHABET.indexOf(plainLetter);
+            const k = ALPHABET.indexOf(keyLetter);
+            return ALPHABET[(p + k) % 26];
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function cifrar() {
+            const passwordInput = document.getElementById("password").value;
+            const keywordInput = document.getElementById("keyword").value.toUpperCase().replace(/[^A-Z]/g, "");
+            const resultBox = document.getElementById("resultado");
+            const btn = document.getElementById("btnCifrar");
+
+            if (!passwordInput || !keywordInput) {
+                resultBox.textContent = "Completa ambos campos.";
+                return;
+            }
+
+            btn.disabled = true;
+            resultBox.textContent = "";
+            clearHighlights();
+
+            let keyIndex = 0;
+            let output = "";
+
+            for (const originalChar of passwordInput) {
+                const upperChar = originalChar.toUpperCase();
+
+                if (ALPHABET.includes(upperChar)) {
+                    const keyLetter = keywordInput[keyIndex % keywordInput.length];
+                    const cipherLetter = vigenereEncryptChar(upperChar, keyLetter);
+
+                    const cell = getCell(keyLetter, upperChar);
+                    const rowHeader = document.querySelector(`th[data-row="${keyLetter}"]`);
+                    const colHeader = document.querySelector(`th[data-col="${upperChar}"]`);
+
+                    if (cell) cell.classList.add("highlight");
+                    if (rowHeader) rowHeader.classList.add("row-key");
+                    if (colHeader) colHeader.classList.add("col-plain");
+
+                    cell?.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+
+                    await sleep(280);
+
+                    output += (originalChar === originalChar.toLowerCase()) ? cipherLetter.toLowerCase() : cipherLetter;
+                    resultBox.textContent = output;
+
+                    if (cell) cell.classList.remove("highlight");
+                    keyIndex++;
+                } else {
+                    output += originalChar;
+                    resultBox.textContent = output;
+                    await sleep(80);
+                }
+            }
+
+            btn.disabled = false;
+        }
+
+        document.getElementById("btnCifrar").addEventListener("click", cifrar);
+    </script>
+
+</body>
+
+</html>
